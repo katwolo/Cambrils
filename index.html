@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azur Palace · Actividades</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-deep:    #0d2b45;
+      --blue-mid:     #1a4a6e;
+      --blue-light:   #3a7ca5;
+      --teal:         #2a9d8f;
+      --gold:         #c9a84c;
+      --gold-light:   #e8c97e;
+      --sand:         #f5efe6;
+      --sand-dark:    #e8ddd0;
+      --terracotta:   #c87941;
+      --white:        #ffffff;
+      --text-dark:    #1a2a3a;
+      --text-mid:     #4a6278;
+      --text-light:   #8a9dae;
+      --shadow:       0 4px 24px rgba(13,43,69,0.12);
+      --shadow-lg:    0 8px 40px rgba(13,43,69,0.18);
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--sand);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--blue-deep);
+      color: var(--white);
+      padding: 0 24px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--blue-deep);
+      letter-spacing: 1px;
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title span:first-child {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--gold-light);
+    }
+
+    .header-title span:last-child {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-top: -2px;
+    }
+
+    .btn-admin {
+      background: none;
+      border: 1.5px solid rgba(201,168,76,0.4);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      cursor: pointer;
+      color: var(--gold-light);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-admin:hover {
+      background: rgba(201,168,76,0.15);
+      border-color: var(--gold);
+    }
+
+    .btn-admin svg { width: 20px; height: 20px; }
+
+    .hero {
+      background: linear-gradient(160deg, var(--blue-deep) 0%, var(--blue-mid) 60%, var(--blue-light) 100%);
+      color: white;
+      text-align: center;
+      padding: 40px 24px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 40px;
+      background: var(--sand);
+      clip-path: ellipse(60% 100% at 50% 100%);
+    }
+
+    .hero-wave {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      opacity: 0.06;
+      font-size: 120px;
+      line-height: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .days-nav {
+      display: flex;
+      gap: 10px;
+      padding: 28px 24px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .days-nav::-webkit-scrollbar { display: none; }
+
+    .day-tab {
+      flex-shrink: 0;
+      background: var(--white);
+      border: 1.5px solid var(--sand-dark);
+      border-radius: 14px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      min-width: 80px;
+      box-shadow: var(--shadow);
+    }
+
+    .day-tab .day-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--text-mid);
+      transition: color 0.25s;
+    }
+
+    .day-tab .day-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    .day-tab.active {
+      background: var(--blue-deep);
+      border-color: var(--blue-deep);
+    }
+
+    .day-tab.active .day-num { color: var(--gold-light); }
+    .day-tab.active .day-label { color: rgba(255,255,255,0.5); }
+
+    .day-tab:hover:not(.active) {
+      border-color: var(--blue-light);
+      transform: translateY(-2px);
+    }
+
+    .type-filters {
+      display: flex;
+      gap: 8px;
+      padding: 4px 24px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .type-filters::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      flex-shrink: 0;
+      background: var(--white);
+      border: 1.5px solid var(--sand-dark);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-mid);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .filter-btn.active-all { background: var(--blue-deep); border-color: var(--blue-deep); color: white; }
+    .filter-btn.active-deportiva { background: var(--teal); border-color: var(--teal); color: white; }
+    .filter-btn.active-cultural { background: var(--terracotta); border-color: var(--terracotta); color: white; }
+    .filter-btn.active-show { background: var(--blue-mid); border-color: var(--blue-mid); color: white; }
+
+    .activities-section {
+      padding: 0 24px 40px;
+    }
+
+    .section-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--blue-deep);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--sand-dark);
+    }
+
+    .section-date span {
+      font-size: 13px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      color: var(--text-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-left: 10px;
+    }
+
+    .activity-card {
+      background: var(--white);
+      border-radius: 18px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .activity-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+
+    .activity-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      gap: 14px;
+      user-select: none;
+    }
+
+    .type-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .type-dot.deportiva { background: var(--teal); }
+    .type-dot.cultural  { background: var(--terracotta); }
+    .type-dot.show      { background: var(--blue-mid); }
+
+    .activity-summary {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.5px;
+    }
+
+    .meta-item svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    .type-badge {
+      flex-shrink: 0;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .type-badge.deportiva { background: rgba(42,157,143,0.12); color: var(--teal); }
+    .type-badge.cultural  { background: rgba(200,121,65,0.12); color: var(--terracotta); }
+    .type-badge.show      { background: rgba(26,74,110,0.12); color: var(--blue-mid); }
+
+    .chevron {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      color: var(--text-light);
+      transition: transform 0.3s;
+    }
+
+    .activity-card.open .chevron { transform: rotate(180deg); }
+
+    .activity-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .activity-card.open .activity-body { max-height: 800px; }
+
+    .activity-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .activity-image-placeholder {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--blue-deep), var(--blue-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .activity-details {
+      padding: 20px;
+      border-top: 1px solid var(--sand-dark);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .detail-item { display: flex; flex-direction: column; gap: 3px; }
+
+    .detail-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      color: var(--text-dark);
+      font-weight: 400;
+    }
+
+    .detail-full { grid-column: 1 / -1; }
+
+    .obs-box {
+      background: var(--sand);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.6;
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 24px;
+      color: var(--text-light);
+    }
+
+    .empty-state p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13,43,69,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      max-width: 460px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: 24px 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--blue-deep);
+    }
+
+    .btn-close {
+      background: var(--sand);
+      border: none;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-mid);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .btn-close:hover { background: var(--sand-dark); }
+
+    .modal-body { padding: 20px 24px 24px; }
+
+    .admin-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .admin-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--sand-dark);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: none;
+      text-align: left;
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .admin-menu-item:hover {
+      border-color: var(--blue-light);
+      background: rgba(58,124,165,0.04);
+    }
+
+    .admin-menu-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .admin-menu-item .item-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .admin-menu-item .item-text small {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .pw-form { display: flex; flex-direction: column; gap: 16px; }
+
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .field-group label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .field-group input, .field-group select, .field-group textarea {
+      border: 1.5px solid var(--sand-dark);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+      border-color: var(--blue-light);
+    }
+
+    .field-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn-primary {
+      background: var(--blue-deep);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover { background: var(--blue-mid); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--blue-deep);
+    }
+
+    .btn-gold:hover { background: linear-gradient(135deg, var(--gold-light), var(--gold)); }
+
+    .msg { font-size: 13px; padding: 10px 14px; border-radius: 8px; text-align: center; }
+    .msg.success { background: rgba(42,157,143,0.1); color: var(--teal); }
+    .msg.error   { background: rgba(200,121,65,0.1); color: var(--terracotta); }
+
+    .edit-act-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .edit-act-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1.5px solid var(--sand-dark);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .edit-act-item:hover { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+
+    .edit-act-item span { font-size: 14px; color: var(--text-dark); }
+    .edit-act-item small { font-size: 11px; color: var(--text-light); }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--sand-dark);
+      margin: 16px 0;
+    }
+
+    @media (max-width: 400px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-logo">AP</div>
+    <div class="header-title">
+      <span>Azur Palace</span>
+      <span>Luxury Collection</span>
+    </div>
+  </div>
+  <button class="btn-admin" onclick="openAdminLogin()" title="Administración">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
+</header>
+
+<div class="hero">
+  <h2>Programa de Experiencias</h2>
+  <h1>Actividades Exclusivas</h1>
+  <p>27 · 28 · 29 · 30 de Abril, 2027</p>
+  <div class="hero-wave">〰〰〰</div>
+</div>
+
+<div class="days-nav" id="daysNav"></div>
+
+<div class="type-filters">
+  <button class="filter-btn active-all" onclick="setFilter('all', this)">Todas</button>
+  <button class="filter-btn" onclick="setFilter('deportiva', this)">🏊 Deportiva</button>
+  <button class="filter-btn" onclick="setFilter('cultural', this)">🏛️ Cultural</button>
+  <button class="filter-btn" onclick="setFilter('show', this)">🎭 Show</button>
+</div>
+
+<div class="activities-section" id="activitiesSection"></div>
+
+<div class="overlay" id="overlayLogin" onclick="closeIfOverlay(event, 'overlayLogin')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Acceso Administración</h3>
+      <button class="btn-close" onclick="closeModal('overlayLogin')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="pw-form">
+        <div class="field-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginInput" placeholder="••••" onkeydown="if(event.key==='Enter')doLogin()" />
+        </div>
+        <div id="loginMsg"></div>
+        <button class="btn-primary btn-gold" onclick="doLogin()">Entrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlayAdminMenu" onclick="closeIfOverlay(event, 'overlayAdminMenu')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Panel de Administración</h3>
+      <button class="btn-close" onclick="closeModal('overlayAdminMenu')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-menu-list">
+        <button class="admin-menu-item" onclick="openEditActivities()">
+          <div class="admin-menu-icon" style="background:rgba(58,124,165,0.1)">✏️</div>
+          <div class="item-text">
+            <strong>Editar Actividades</strong>
+            <small>Modifica textos e imágenes</small>
+          </div>
+        </button>
+        <button class="admin-menu-item" onclick="openChangePassword()">
+          <div class="admin-menu-icon" style="background:rgba(201,168,76,0.1)">🔑</div>
+          <div class="item-text">
+            <strong>Cambiar Contraseña</strong>
+            <small>Actualiza el acceso de administrador</small>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlayEditList" onclick="closeIfOverlay(event, 'overlayEditList')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Seleccionar Actividad</h3>
+      <button class="btn-close" onclick="closeModal('overlayEditList')">✕</button>
+    </div>
+    <div class="modal-body" id="editListBody"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlayEditActivity" onclick="closeIfOverlay(event, 'overlayEditActivity')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Editar Actividad</h3>
+      <button class="btn-close" onclick="closeModal('overlayEditActivity')">✕</button>
+    </div>
+    <div class="modal-body" id="editActivityBody"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlayChangePw" onclick="closeIfOverlay(event, 'overlayChangePw')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Cambiar Contraseña</h3>
+      <button class="btn-close" onclick="closeModal('overlayChangePw')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="pw-form">
+        <div class="field-group">
+          <label>Contraseña actual</label>
+          <input type="password" id="pwCurrent" placeholder="••••" />
+        </div>
+        <div class="field-group">
+          <label>Nueva contraseña</label>
+          <input type="password" id="pwNew" placeholder="••••" />
+        </div>
+        <div class="field-group">
+          <label>Confirmar nueva contraseña</label>
+          <input type="password" id="pwConfirm" placeholder="••••" />
+        </div>
+        <div id="pwMsg"></div>
+        <button class="btn-primary" onclick="doChangePassword()">Guardar contraseña</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  { date: '27', month: 'ABR', full: 'Martes, 27 de Abril 2027' },
+  { date: '28', month: 'ABR', full: 'Miércoles, 28 de Abril 2027' },
+  { date: '29', month: 'ABR', full: 'Jueves, 29 de Abril 2027' },
+  { date: '30', month: 'ABR', full: 'Viernes, 30 de Abril 2027' },
+];
+
+let adminPassword = '1234';
+let currentDay = 0;
+let currentFilter = 'all';
+
+let activities = [
+  { id: 1, day: 0, type: 'deportiva', name: 'Yoga Sunrise en la Terraza', time: '07:30', location: 'Terraza Infinity, Planta 8', instructor: 'Valentina Greco', material: 'Esterilla (incluida), ropa cómoda', obs: 'Se recomienda acudir en ayunas. Plazas limitadas a 12 personas. Vistas panorámicas al Mediterráneo.', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80' },
+  { id: 2, day: 0, type: 'cultural', name: 'Tour Privado Casco Antiguo', time: '10:00', location: 'Salida lobby principal', instructor: 'Marco Ferri, historiador', material: 'Calzado cómodo, sombrero recomendado', obs: 'Recorrido de 2,5 horas por los rincones más secretos de la ciudad. Incluye degustación de productos locales.', image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80' },
+  { id: 3, day: 0, type: 'cultural', name: 'Taller de Cerámica Tradicional', time: '16:00', location: 'Sala Artesanía, Planta B1', instructor: 'Lucia Morales', material: 'Delantal proporcionado, ropa que pueda mancharse', obs: 'Aprende las técnicas de cerámica mediterránea. Las piezas se hornean y se entregan el último día.', image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80' },
+  { id: 4, day: 0, type: 'show', name: 'Noche de Flamenco & Tapas', time: '21:00', location: 'Jardín El Aljibe', instructor: 'Compañía Carmen Vega', material: 'Vestimenta elegante recomendada', obs: 'Espectáculo íntimo bajo las estrellas con actuación de artistas internacionales. Incluye servicio de tapas gourmet y copa de bienvenida.', image: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=600&q=80' },
+  { id: 5, day: 1, type: 'deportiva', name: 'Kayak en Calas Cristalinas', time: '09:00', location: 'Embarcadero Privado', instructor: 'Carlos Ruiz, monitor náutico', material: 'Bañador, crema solar, toalla (kayak y chaleco incluidos)', obs: 'Excursión de 2 horas por calas de acceso exclusivo. Parada para snorkel en cala secreta. Nivel principiante bienvenido.', image: 'https://images.unsplash.com/photo-1464280950902-dc5bd4384660?w=600&q=80' },
+  { id: 6, day: 1, type: 'deportiva', name: 'Pádel en Pistas de Arcilla', time: '11:30', location: 'Club de Tenis, Villa Sur', instructor: 'Andrea Blanco, entrenadora federada', material: 'Ropa deportiva, zapatillas de arcilla (pala disponible)', obs: 'Sesión de iniciación o perfeccionamiento. Grupos máximo 4 jugadores. Reserva tu plaza con antelación.', image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600&q=80' },
+  { id: 7, day: 1, type: 'cultural', name: 'Cata de Vinos & Aceites del Mediterráneo', time: '18:30', location: 'Bodega La Crianza, Sótano', instructor: 'Sommelier Pierre Dubois', material: 'Ninguno — todo incluido', obs: 'Selección de 6 vinos DO locales maridados con aceites de oliva virgen extra de la finca. Maridaje con quesos artesanales.', image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80' },
+  { id: 8, day: 1, type: 'show', name: 'Jazz en la Terraza del Atardecer', time: '20:30', location: 'Sky Bar Poseidón', instructor: 'Trío Mediterráneo Jazz', material: 'Smart casual', obs: 'Concierto íntimo con vistas al mar en el momento del ocaso. Carta de cócteles de autor disponible. Reserva de mesa recomendada.', image: 'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&q=80' },
+  { id: 9, day: 2, type: 'deportiva', name: 'Senderismo Costal al Amanecer', time: '07:00', location: 'Mirador de la Cala, acceso Norte', instructor: 'Iván Serra, guía de montaña', material: 'Zapatillas de trekking, agua, snack ligero', obs: 'Ruta de 8 km nivel moderado con vistas de altura. Duración aproximada 2h 30min. Plazas limitadas a 10 personas.', image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80' },
+  { id: 10, day: 2, type: 'deportiva', name: 'Paddle Surf & Snorkel', time: '10:30', location: 'Playa Privada Azur', instructor: 'Sara Vidal, instructora acuática', material: 'Bañador, gafas de sol (equipo incluido)', obs: 'Sesión combinada de paddle surf y snorkel en aguas protegidas. Apto para todos los niveles. Incluye hidratación.', image: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&q=80' },
+  { id: 11, day: 2, type: 'cultural', name: 'Visita a Bodega Histórica Siglo XII', time: '16:00', location: 'Salida en Bus, Lobby', instructor: 'Elena Castillo, enóloga', material: 'Ropa cómoda, calzado cerrado', obs: 'Visita guiada a una de las bodegas más antiguas de la región. Incluye traslado en vehículo privado y degustación premium.', image: 'https://images.unsplash.com/photo-1504279807002-09854ccc9b6c?w=600&q=80' },
+  { id: 12, day: 2, type: 'show', name: 'Noche de Ópera Mediterránea', time: '21:00', location: 'Gran Salón Azur', instructor: 'Soprano Isabelle Roux & Tenor Miguel Ríos', material: 'Etiqueta formal', obs: 'Velada única con aria y canciones mediterráneas interpretadas por solistas internacionales. Cena de gala opcional (reserva previa).', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80' },
+  { id: 13, day: 3, type: 'deportiva', name: 'Aqua Fitness en Piscina Infinity', time: '09:30', location: 'Piscina Principal, Planta 6', instructor: 'Nuria Pons, monitora deportiva', material: 'Bañador, gorro (opcional)', obs: 'Clase en el agua de 45 minutos, ideal para todas las edades y niveles. Finaliza con jacuzzi libre 30 minutos.', image: 'https://images.unsplash.com/photo-1560089000-7433a4ebbd64?w=600&q=80' },
+  { id: 14, day: 3, type: 'cultural', name: 'Masterclass de Cocina Mediterránea', time: '11:00', location: 'Cocina Gastronómica, Planta B1', instructor: 'Chef Tomás Pérez ⭐⭐', material: 'Ropa cómoda (mandil proporcionado)', obs: 'Aprende a preparar tres recetas estrella del Mediterráneo. Almuerzo incluido con los platos elaborados. Máximo 8 participantes.', image: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=600&q=80' },
+  { id: 15, day: 3, type: 'show', name: 'Gran Gala de Despedida', time: '21:30', location: 'Jardín Imperial & Terraza', instructor: 'Orquesta Palau & Artistas Invitados', material: 'Etiqueta de gala', obs: 'La velada más especial de la temporada. Fuegos artificiales, música en vivo, buffet gourmet y barra libre premium. ¡El broche de oro perfecto!', image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80' },
+];
+
+let isAdmin = false;
+let editingId = null;
+
+function renderDays() {
+  const nav = document.getElementById('daysNav');
+  nav.innerHTML = DAYS.map((d, i) => `
+    <div class="day-tab ${i === currentDay ? 'active' : ''}" onclick="selectDay(${i})">
+      <div class="day-num">${d.date}</div>
+      <div class="day-label">${d.month}</div>
+    </div>
+  `).join('');
+}
+
+function renderActivities() {
+  const section = document.getElementById('activitiesSection');
+  const day = DAYS[currentDay];
+  const list = activities.filter(a =>
+    a.day === currentDay && (currentFilter === 'all' || a.type === currentFilter)
+  );
+
+  if (!list.length) {
+    section.innerHTML = `<div class="empty-state"><p>No hay actividades para este filtro.</p></div>`;
+    return;
+  }
+
+  const typeEmoji = { deportiva: '🏊', cultural: '🏛️', show: '🎭' };
+  const typeName  = { deportiva: 'Deportiva', cultural: 'Cultural', show: 'Show' };
+
+  section.innerHTML = `
+    <div class="section-date">
+      ${day.date} de Abril <span>${['Martes','Miércoles','Jueves','Viernes'][currentDay]}</span>
+    </div>
+    ${list.map(a => `
+      <div class="activity-card" id="card-${a.id}">
+        <div class="activity-header" onclick="toggleCard(${a.id})">
+          <div class="type-dot ${a.type}"></div>
+          <div class="activity-summary">
+            <div class="activity-name">${a.name}</div>
+            <div class="activity-meta">
+              <span class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                ${a.time}
+              </span>
+              <span class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                ${a.location}
+              </span>
+            </div>
+          </div>
+          <span class="type-badge ${a.type}">${typeEmoji[a.type]} ${typeName[a.type]}</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="activity-body">
+          ${a.image
+            ? `<img class="activity-image" src="${a.image}" alt="${a.name}" onerror="this.style.display='none'" />`
+            : `<div class="activity-image-placeholder">🌊</div>`
+          }
+          <div class="activity-details">
+            <div class="detail-grid">
+              <div class="detail-item"><span class="detail-label">Horario</span><span class="detail-value">${a.time} h</span></div>
+              <div class="detail-item"><span class="detail-label">Tipo</span><span class="detail-value">${typeEmoji[a.type]} ${typeName[a.type]}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Ubicación</span><span class="detail-value">${a.location}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Responsable / Clase impartida por</span><span class="detail-value">${a.instructor}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Material necesario</span><span class="detail-value">${a.material}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Observaciones</span><div class="obs-box">${a.obs}</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function toggleCard(id) { document.getElementById(`card-${id}`).classList.toggle('open'); }
+function selectDay(i) { currentDay = i; renderDays(); renderActivities(); }
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => { b.className = 'filter-btn'; });
+  btn.classList.add(`active-${type}`);
+  renderActivities();
+}
+
+function openAdminLogin() {
+  if (isAdmin) { openModal('overlayAdminMenu'); return; }
+  document.getElementById('loginInput').value = '';
+  document.getElementById('loginMsg').innerHTML = '';
+  openModal('overlayLogin');
+  setTimeout(() => document.getElementById('loginInput').focus(), 100);
+}
+
+function doLogin() {
+  const val = document.getElementById('loginInput').value;
+  if (val === adminPassword) { isAdmin = true; closeModal('overlayLogin'); openModal('overlayAdminMenu'); }
+  else { document.getElementById('loginMsg').innerHTML = '<div class="msg error">Contraseña incorrecta</div>'; }
+}
+
+function openChangePassword() {
+  closeModal('overlayAdminMenu');
+  ['pwCurrent','pwNew','pwConfirm'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pwMsg').innerHTML = '';
+  openModal('overlayChangePw');
+}
+
+function doChangePassword() {
+  const cur = document.getElementById('pwCurrent').value;
+  const nw  = document.getElementById('pwNew').value;
+  const cf  = document.getElementById('pwConfirm').value;
+  const msg = document.getElementById('pwMsg');
+  if (cur !== adminPassword) { msg.innerHTML = '<div class="msg error">La contraseña actual no es correcta</div>'; return; }
+  if (!nw || nw.length < 3) { msg.innerHTML = '<div class="msg error">La nueva contraseña debe tener al menos 3 caracteres</div>'; return; }
+  if (nw !== cf) { msg.innerHTML = '<div class="msg error">Las contraseñas no coinciden</div>'; return; }
+  adminPassword = nw;
+  msg.innerHTML = '<div class="msg success">Contraseña actualizada correctamente ✓</div>';
+  setTimeout(() => { closeModal('overlayChangePw'); openModal('overlayAdminMenu'); }, 1500);
+}
+
+function openEditActivities() {
+  closeModal('overlayAdminMenu');
+  const body = document.getElementById('editListBody');
+  const typeEmoji = { deportiva: '🏊', cultural: '🏛️', show: '🎭' };
+  body.innerHTML = DAYS.map((d, di) => `
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;font-weight:500;">${d.full}</div>
+      <div class="edit-act-list">
+        ${activities.filter(a => a.day === di).map(a => `
+          <div class="edit-act-item" onclick="openEditSingle(${a.id})">
+            <div><span>${typeEmoji[a.type]} ${a.name}</span><br/><small>${a.time} · ${a.location}</small></div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('') + `<hr class="divider"/><p style="font-size:11px;color:var(--text-light);text-align:center;">Selecciona una actividad para editarla</p>`;
+  openModal('overlayEditList');
+}
+
+function openEditSingle(id) {
+  editingId = id;
+  const a = activities.find(x => x.id === id);
+  if (!a) return;
+  closeModal('overlayEditList');
+  document.getElementById('editActivityBody').innerHTML = `
+    <div class="pw-form">
+      <div class="field-group"><label>Nombre de la actividad</label><input type="text" id="edit_name" value="${escHtml(a.name)}" /></div>
+      <div class="field-group"><label>Hora</label><input type="time" id="edit_time" value="${a.time}" /></div>
+      <div class="field-group"><label>Ubicación</label><input type="text" id="edit_location" value="${escHtml(a.location)}" /></div>
+      <div class="field-group"><label>Clase impartida por</label><input type="text" id="edit_instructor" value="${escHtml(a.instructor)}" /></div>
+      <div class="field-group"><label>Material necesario</label><input type="text" id="edit_material" value="${escHtml(a.material)}" /></div>
+      <div class="field-group"><label>Observaciones</label><textarea id="edit_obs">${escHtml(a.obs)}</textarea></div>
+      <div class="field-group"><label>URL de imagen</label><input type="url" id="edit_image" value="${escHtml(a.image || '')}" placeholder="https://ejemplo.com/imagen.jpg" /></div>
+      <div class="field-group"><label>Tipo</label>
+        <select id="edit_type">
+          <option value="deportiva" ${a.type==='deportiva'?'selected':''}>🏊 Deportiva</option>
+          <option value="cultural"  ${a.type==='cultural' ?'selected':''}>🏛️ Cultural</option>
+          <option value="show"      ${a.type==='show'     ?'selected':''}>🎭 Show</option>
+        </select>
+      </div>
+      <div id="editMsg"></div>
+      <button class="btn-primary btn-gold" onclick="saveEditSingle()">Guardar cambios</button>
+      <button class="btn-primary" style="background:var(--sand-dark);color:var(--text-dark);margin-top:4px" onclick="openEditActivities()">← Volver al listado</button>
+    </div>
+  `;
+  openModal('overlayEditActivity');
+}
+
+function saveEditSingle() {
+  const a = activities.find(x => x.id === editingId);
+  if (!a) return;
+  a.name       = document.getElementById('edit_name').value.trim();
+  a.time       = document.getElementById('edit_time').value;
+  a.location   = document.getElementById('edit_location').value.trim();
+  a.instructor = document.getElementById('edit_instructor').value.trim();
+  a.material   = document.getElementById('edit_material').value.trim();
+  a.obs        = document.getElementById('edit_obs').value.trim();
+  a.image      = document.getElementById('edit_image').value.trim();
+  a.type       = document.getElementById('edit_type').value;
+  document.getElementById('editMsg').innerHTML = '<div class="msg success">Guardado correctamente ✓</div>';
+  renderActivities();
+  setTimeout(() => { closeModal('overlayEditActivity'); openModal('overlayAdminMenu'); }, 1200);
+}
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeIfOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+renderDays();
+renderActivities();
+</script>
+</body>
+</html>
