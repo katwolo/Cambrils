@@ -1,1 +1,942 @@
-jd
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azur Palace · Activitats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #f2f2f7;
+      --white:        #ffffff;
+      --indigo:       #5b5bd6;
+      --indigo-light: #e8e8ff;
+      --mint:         #12b886;
+      --mint-light:   #d3f9d8;
+      --coral:        #f76707;
+      --coral-light:  #ffe8d6;
+      --purple:       #7048e8;
+      --purple-light: #ede9fe;
+      --text-dark:    #1a1a2e;
+      --text-mid:     #4a4a6a;
+      --text-light:   #9999bb;
+      --border:       #e8e8f0;
+      --shadow-sm:    0 2px 8px rgba(90,90,180,0.07);
+      --shadow-md:    0 4px 20px rgba(90,90,180,0.11);
+      --shadow-lg:    0 8px 32px rgba(90,90,180,0.15);
+      --radius:       20px;
+      --radius-sm:    12px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      padding: 0 20px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+
+    .header-logo {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--indigo-light);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .header-logo img {
+      width: 100%; height: 100%;
+      object-fit: cover; border-radius: 12px;
+    }
+
+    .header-logo-text {
+      font-size: 16px; font-weight: 800;
+      color: var(--indigo); letter-spacing: -0.5px;
+    }
+
+    .header-title { display: flex; flex-direction: column; }
+
+    .header-title span:first-child {
+      font-size: 16px; font-weight: 700;
+      color: var(--text-dark); letter-spacing: -0.3px;
+    }
+
+    .header-title span:last-child {
+      font-size: 10px; font-weight: 500;
+      color: var(--text-light); letter-spacing: 0.5px;
+    }
+
+    .btn-admin {
+      background: var(--indigo-light);
+      border: none; border-radius: 50%;
+      width: 38px; height: 38px;
+      cursor: pointer; color: var(--indigo);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-admin:hover { background: var(--indigo); color: white; }
+    .btn-admin svg { width: 18px; height: 18px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--indigo);
+      color: white;
+      text-align: center;
+      padding: 36px 24px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 36px;
+      background: var(--bg);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .hero-blob-1 { width: 200px; height: 200px; background: #a78bfa; top: -60px; right: -40px; }
+    .hero-blob-2 { width: 150px; height: 150px; background: #34d399; bottom: 0; left: -30px; }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      font-size: 32px; font-weight: 800;
+      letter-spacing: -0.5px; line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── DAYS NAV ── */
+    .days-nav {
+      display: flex; gap: 8px;
+      padding: 24px 20px 12px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .days-nav::-webkit-scrollbar { display: none; }
+
+    .day-tab {
+      flex-shrink: 0;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      cursor: pointer; transition: all 0.2s;
+      text-align: center; min-width: 72px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .day-tab .day-num {
+      font-size: 24px; font-weight: 800;
+      line-height: 1; color: var(--text-mid);
+      transition: color 0.2s;
+    }
+
+    .day-tab .day-label {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-light); margin-top: 2px;
+    }
+
+    .day-tab.active { background: var(--indigo); border-color: var(--indigo); }
+    .day-tab.active .day-num  { color: white; }
+    .day-tab.active .day-label { color: rgba(255,255,255,0.6); }
+    .day-tab:hover:not(.active) { border-color: var(--indigo); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+    /* ── FILTERS ── */
+    .type-filters {
+      display: flex; gap: 8px;
+      padding: 4px 20px 16px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .type-filters::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      flex-shrink: 0;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 6px 16px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      color: var(--text-mid);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .filter-btn.active-all       { background: var(--indigo);  border-color: var(--indigo);  color: white; }
+    .filter-btn.active-esportiva { background: var(--mint);    border-color: var(--mint);    color: white; }
+    .filter-btn.active-cultural  { background: var(--coral);   border-color: var(--coral);   color: white; }
+    .filter-btn.active-show      { background: var(--purple);  border-color: var(--purple);  color: white; }
+
+    /* ── ACTIVITIES ── */
+    .activities-section { padding: 0 20px 40px; }
+
+    .section-date {
+      font-size: 20px; font-weight: 800;
+      color: var(--text-dark); margin-bottom: 14px;
+      padding-bottom: 10px; border-bottom: 1.5px solid var(--border);
+      letter-spacing: -0.3px;
+    }
+
+    .section-date span {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-light); margin-left: 8px;
+      letter-spacing: 0;
+    }
+
+    .activity-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+      border: 1.5px solid var(--border);
+    }
+    .activity-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+    .activity-header {
+      display: flex; align-items: center;
+      padding: 14px 16px; cursor: pointer;
+      gap: 12px; user-select: none;
+    }
+
+    .type-pill {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .type-pill.esportiva { background: var(--mint-light); }
+    .type-pill.cultural  { background: var(--coral-light); }
+    .type-pill.show      { background: var(--purple-light); }
+
+    .activity-summary { flex: 1; min-width: 0; }
+
+    .activity-name {
+      font-size: 15px; font-weight: 700;
+      color: var(--text-dark);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: -0.2px;
+    }
+
+    .activity-meta { display: flex; gap: 10px; margin-top: 3px; flex-wrap: wrap; }
+
+    .meta-item {
+      display: flex; align-items: center; gap: 3px;
+      font-size: 11px; font-weight: 500;
+      color: var(--text-light);
+    }
+    .meta-item svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    .type-badge {
+      flex-shrink: 0;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .type-badge.esportiva { background: var(--mint-light);   color: var(--mint); }
+    .type-badge.cultural  { background: var(--coral-light);  color: var(--coral); }
+    .type-badge.show      { background: var(--purple-light); color: var(--purple); }
+
+    .chevron {
+      flex-shrink: 0; width: 18px; height: 18px;
+      color: var(--text-light); transition: transform 0.3s;
+    }
+    .activity-card.open .chevron { transform: rotate(180deg); }
+
+    .activity-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .activity-card.open .activity-body { max-height: 800px; }
+
+    .activity-image { width: 100%; height: 190px; object-fit: cover; display: block; }
+
+    .activity-image-placeholder {
+      width: 100%; height: 190px;
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      display: flex; align-items: center; justify-content: center; font-size: 44px;
+    }
+
+    .activity-details { padding: 16px; border-top: 1.5px solid var(--border); }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .detail-item { display: flex; flex-direction: column; gap: 2px; }
+
+    .detail-label {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    .detail-value { font-size: 13px; font-weight: 500; color: var(--text-dark); }
+    .detail-full { grid-column: 1 / -1; }
+
+    .obs-box {
+      background: var(--indigo-light);
+      border-left: 3px solid var(--indigo);
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-mid); line-height: 1.6;
+    }
+
+    .empty-state { text-align: center; padding: 50px 24px; color: var(--text-light); }
+    .empty-state p { font-size: 18px; font-weight: 600; }
+
+    /* ── MODALS ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,26,46,0.5);
+      backdrop-filter: blur(6px);
+      z-index: 200; display: none;
+      align-items: flex-end; justify-content: center;
+      padding: 0;
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 24px 24px 0 0;
+      width: 100%; max-width: 480px;
+      max-height: 92vh; overflow-y: auto;
+      box-shadow: 0 -8px 40px rgba(90,90,180,0.18);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(40px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+
+    .modal-header {
+      padding: 16px 20px 0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 20px; font-weight: 800;
+      color: var(--text-dark); letter-spacing: -0.3px;
+    }
+
+    .btn-close {
+      background: var(--bg); border: none; border-radius: 50%;
+      width: 32px; height: 32px; cursor: pointer;
+      font-size: 14px; color: var(--text-mid);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .btn-close:hover { background: var(--border); }
+
+    .modal-body { padding: 16px 20px 32px; }
+
+    .admin-menu-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+
+    .admin-menu-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer; transition: all 0.2s;
+      background: none; text-align: left; width: 100%;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .admin-menu-item:hover { border-color: var(--indigo); background: var(--indigo-light); }
+
+    .admin-menu-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+
+    .admin-menu-item .item-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+    .admin-menu-item .item-text small  { font-size: 11px; font-weight: 500; color: var(--text-light); }
+
+    .pw-form { display: flex; flex-direction: column; gap: 14px; }
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+
+    .field-group label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--text-light);
+    }
+
+    .field-group input, .field-group select, .field-group textarea {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px; font-size: 14px; font-weight: 500;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-dark); outline: none;
+      transition: border-color 0.2s; background: var(--white);
+    }
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--indigo); }
+    .field-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn-primary {
+      background: var(--indigo); color: white; border: none;
+      border-radius: var(--radius-sm); padding: 13px;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: opacity 0.2s, transform 0.1s; width: 100%;
+    }
+    .btn-primary:hover   { opacity: 0.88; }
+    .btn-primary:active  { transform: scale(0.98); }
+
+    .btn-gold    { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #1a1a2e; }
+    .btn-danger  { background: #ef4444; }
+    .btn-neutral { background: var(--bg); color: var(--text-mid); }
+
+    .msg { font-size: 13px; font-weight: 600; padding: 10px 14px; border-radius: 10px; text-align: center; }
+    .msg.success { background: var(--mint-light);  color: var(--mint); }
+    .msg.error   { background: var(--coral-light); color: var(--coral); }
+
+    .edit-act-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+    .edit-act-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .edit-act-item:hover { border-color: var(--indigo); background: var(--indigo-light); }
+    .edit-act-item span { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+    .edit-act-item small { font-size: 11px; color: var(--text-light); }
+
+    .divider { border: none; border-top: 1.5px solid var(--border); margin: 14px 0; }
+
+    .btn-row { display: flex; gap: 8px; }
+    .btn-row .btn-primary { flex: 1; }
+
+    @media (min-width: 480px) {
+      .overlay { align-items: center; padding: 20px; }
+      .modal   { border-radius: 24px; max-height: 90vh; }
+      .modal-handle { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-logo" id="headerLogo">
+      <span class="header-logo-text" id="logoText">AP</span>
+    </div>
+    <div class="header-title">
+      <span>Azur Palace</span>
+      <span>Col·lecció de Luxe</span>
+    </div>
+  </div>
+  <button class="btn-admin" onclick="openAdminLogin()" title="Administració">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
+</header>
+
+<div class="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-tag">Programa d'Experiències</div>
+  <h1>Activitats Exclusives</h1>
+  <p>27 · 28 · 29 · 30 d'Abril, 2027</p>
+</div>
+
+<div class="days-nav" id="daysNav"></div>
+
+<div class="type-filters">
+  <button class="filter-btn active-all"       onclick="setFilter('all', this)">Totes</button>
+  <button class="filter-btn"                  onclick="setFilter('esportiva', this)">🏊 Esportiva</button>
+  <button class="filter-btn"                  onclick="setFilter('cultural', this)">🏛️ Cultural</button>
+  <button class="filter-btn"                  onclick="setFilter('show', this)">🎭 Espectacle</button>
+</div>
+
+<div class="activities-section" id="activitiesSection"></div>
+
+<!-- MODAL: Login -->
+<div class="overlay" id="overlayLogin" onclick="closeIfOverlay(event,'overlayLogin')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Accés Administració</h3>
+      <button class="btn-close" onclick="closeModal('overlayLogin')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="pw-form">
+        <div class="field-group">
+          <label>Contrasenya</label>
+          <input type="password" id="loginInput" placeholder="••••" onkeydown="if(event.key==='Enter')doLogin()" />
+        </div>
+        <div id="loginMsg"></div>
+        <button class="btn-primary btn-gold" onclick="doLogin()">Entrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Admin Menu -->
+<div class="overlay" id="overlayAdminMenu" onclick="closeIfOverlay(event,'overlayAdminMenu')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Tauler d'Administració</h3>
+      <button class="btn-close" onclick="closeModal('overlayAdminMenu')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-menu-list">
+        <button class="admin-menu-item" onclick="openEditActivities()">
+          <div class="admin-menu-icon" style="background:var(--indigo-light)">✏️</div>
+          <div class="item-text">
+            <strong>Editar Activitats</strong>
+            <small>Modifica textos i imatges</small>
+          </div>
+        </button>
+        <button class="admin-menu-item" onclick="openEditLogo()">
+          <div class="admin-menu-icon" style="background:var(--mint-light)">🖼️</div>
+          <div class="item-text">
+            <strong>Logo de l'Institut</strong>
+            <small>Canvia la imatge del logo</small>
+          </div>
+        </button>
+        <button class="admin-menu-item" onclick="openChangePassword()">
+          <div class="admin-menu-icon" style="background:var(--coral-light)">🔑</div>
+          <div class="item-text">
+            <strong>Canviar Contrasenya</strong>
+            <small>Actualitza l'accés d'administrador</small>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit Logo -->
+<div class="overlay" id="overlayEditLogo" onclick="closeIfOverlay(event,'overlayEditLogo')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Logo de l'Institut</h3>
+      <button class="btn-close" onclick="closeModal('overlayEditLogo')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="pw-form">
+        <div style="text-align:center;margin-bottom:8px">
+          <div id="logoPreview" style="width:72px;height:72px;border-radius:16px;background:var(--indigo-light);display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--indigo);overflow:hidden;"></div>
+        </div>
+        <div class="field-group">
+          <label>URL de la imatge del logo</label>
+          <input type="url" id="logoUrlInput" placeholder="https://exemple.com/logo.png" oninput="previewLogo()" />
+        </div>
+        <p style="font-size:11px;color:var(--text-light);font-weight:500;">Deixa-ho en blanc per mostrar les inicials "AP".</p>
+        <div id="logoMsg"></div>
+        <button class="btn-primary" onclick="saveLogo()">Desar logo</button>
+        <button class="btn-primary btn-neutral" style="margin-top:6px" onclick="closeModal('overlayEditLogo');openModal('overlayAdminMenu')">← Tornar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit List -->
+<div class="overlay" id="overlayEditList" onclick="closeIfOverlay(event,'overlayEditList')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Seleccionar Activitat</h3>
+      <button class="btn-close" onclick="closeModal('overlayEditList')">✕</button>
+    </div>
+    <div class="modal-body" id="editListBody"></div>
+  </div>
+</div>
+
+<!-- MODAL: Edit Single -->
+<div class="overlay" id="overlayEditActivity" onclick="closeIfOverlay(event,'overlayEditActivity')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Editar Activitat</h3>
+      <button class="btn-close" onclick="closeModal('overlayEditActivity')">✕</button>
+    </div>
+    <div class="modal-body" id="editActivityBody"></div>
+  </div>
+</div>
+
+<!-- MODAL: Confirm Delete -->
+<div class="overlay" id="overlayConfirmDelete" onclick="closeIfOverlay(event,'overlayConfirmDelete')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Eliminar Activitat</h3>
+      <button class="btn-close" onclick="closeModal('overlayConfirmDelete')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;font-weight:500;color:var(--text-mid);margin-bottom:20px;">Estàs segur que vols eliminar aquesta activitat? Aquesta acció no es pot desfer.</p>
+      <div class="btn-row">
+        <button class="btn-primary btn-neutral" onclick="closeModal('overlayConfirmDelete');openModal('overlayEditActivity')">Cancel·lar</button>
+        <button class="btn-primary btn-danger"  onclick="confirmDelete()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Change Password -->
+<div class="overlay" id="overlayChangePw" onclick="closeIfOverlay(event,'overlayChangePw')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Canviar Contrasenya</h3>
+      <button class="btn-close" onclick="closeModal('overlayChangePw')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="pw-form">
+        <div class="field-group">
+          <label>Contrasenya actual</label>
+          <input type="password" id="pwCurrent" placeholder="••••" />
+        </div>
+        <div class="field-group">
+          <label>Nova contrasenya</label>
+          <input type="password" id="pwNew" placeholder="••••" />
+        </div>
+        <div class="field-group">
+          <label>Confirmar nova contrasenya</label>
+          <input type="password" id="pwConfirm" placeholder="••••" />
+        </div>
+        <div id="pwMsg"></div>
+        <button class="btn-primary" onclick="doChangePassword()">Desar contrasenya</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  { date: '27', month: 'ABR', full: 'Dimarts, 27 d\'Abril 2027' },
+  { date: '28', month: 'ABR', full: 'Dimecres, 28 d\'Abril 2027' },
+  { date: '29', month: 'ABR', full: 'Dijous, 29 d\'Abril 2027' },
+  { date: '30', month: 'ABR', full: 'Divendres, 30 d\'Abril 2027' },
+];
+
+let adminPassword = '1234';
+let currentDay    = 0;
+let currentFilter = 'all';
+let isAdmin       = false;
+let editingId     = null;
+let logoUrl       = '';
+
+let activities = [
+  { id: 1,  day: 0, type: 'esportiva', name: 'Ioga Sunrise a la Terrassa',          time: '07:30', location: 'Terrassa Infinity, Planta 8',      instructor: 'Valentina Greco',                         material: 'Estora (inclosa), roba còmoda',                          obs: 'Es recomana venir en dejú. Places limitades a 12 persones. Vistes panoràmiques al Mediterrani.',                                                                      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80' },
+  { id: 2,  day: 0, type: 'cultural',  name: 'Tour Privat Casc Antic',               time: '10:00', location: 'Sortida lobby principal',           instructor: 'Marco Ferri, historiador',                 material: 'Calçat còmode, barret recomanat',                         obs: 'Recorregut de 2,5 hores pels racons més secrets de la ciutat. Inclou degustació de productes locals.',                                                                 image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80' },
+  { id: 3,  day: 0, type: 'cultural',  name: 'Taller de Ceràmica Tradicional',       time: '16:00', location: 'Sala Artesania, Planta B1',         instructor: 'Lucia Morales',                           material: 'Davantal proporcionat, roba que pugui tacar-se',          obs: 'Aprèn les tècniques de ceràmica mediterrània. Les peces es couen al forn i s\'entreguen l\'últim dia.',                                                                image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80' },
+  { id: 4,  day: 0, type: 'show',      name: 'Nit de Flamenc & Tapes',               time: '21:00', location: 'Jardí El Aljibe',                   instructor: 'Companyia Carmen Vega',                    material: 'Vestimenta elegant recomanada',                           obs: 'Espectacle íntim sota les estrelles amb actuació d\'artistes internacionals. Inclou servei de tapes gourmet i copa de benvinguda.',                                    image: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=600&q=80' },
+  { id: 5,  day: 1, type: 'esportiva', name: 'Caiac a Cales Cristal·lines',          time: '09:00', location: 'Embarcador Privat',                 instructor: 'Carlos Ruiz, monitor nàutic',              material: 'Banyador, crema solar, tovallola (caiac i armilla inclosos)', obs: 'Excursió de 2 hores per cales d\'accés exclusiu. Parada per fer snorkel en una cala secreta.',                                                                       image: 'https://images.unsplash.com/photo-1464280950902-dc5bd4384660?w=600&q=80' },
+  { id: 6,  day: 1, type: 'esportiva', name: 'Pàdel en Pistes de Terra Batuda',      time: '11:30', location: 'Club de Tennis, Villa Sud',          instructor: 'Andrea Blanco, entrenadora federada',     material: 'Roba esportiva, sabatilles de terra (pala disponible)',   obs: 'Sessió d\'iniciació o perfeccionament. Grups màxim 4 jugadors. Reserva la teva plaça amb antelació.',                                                                 image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600&q=80' },
+  { id: 7,  day: 1, type: 'cultural',  name: 'Tast de Vins & Olis del Mediterrani',  time: '18:30', location: 'Celler La Criança, Soterrani',       instructor: 'Sommelier Pierre Dubois',                 material: 'Cap — tot inclòs',                                        obs: 'Selecció de 6 vins DO locals maridats amb olis d\'oliva verge extra de la finca. Maridat amb formatges artesans.',                                                     image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80' },
+  { id: 8,  day: 1, type: 'show',      name: 'Jazz a la Terrassa del Capvespre',     time: '20:30', location: 'Sky Bar Posidó',                     instructor: 'Trio Mediterrani Jazz',                    material: 'Smart casual',                                           obs: 'Concert íntim amb vistes al mar en el moment del crepuscle. Carta de còctels d\'autor disponible.',                                                                   image: 'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&q=80' },
+  { id: 9,  day: 2, type: 'esportiva', name: 'Senderisme Costaner a l\'Alba',        time: '07:00', location: 'Mirador de la Cala, accés Nord',     instructor: 'Iván Serra, guia de muntanya',            material: 'Sabatilles de trekking, aigua, berenar lleuger',          obs: 'Ruta de 8 km nivell moderat amb vistes d\'alçada. Durada aproximada 2h 30min. Places limitades a 10 persones.',                                                        image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80' },
+  { id: 10, day: 2, type: 'esportiva', name: 'Paddle Surf & Snorkel',                time: '10:30', location: 'Platja Privada Azur',                instructor: 'Sara Vidal, instructora aquàtica',        material: 'Banyador, ulleres de sol (equip inclòs)',                 obs: 'Sessió combinada de paddle surf i snorkel en aigües protegides. Apte per a tots els nivells.',                                                                         image: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&q=80' },
+  { id: 11, day: 2, type: 'cultural',  name: 'Visita a Celler Històric Segle XII',   time: '16:00', location: 'Sortida en Bus, Lobby',              instructor: 'Elena Castillo, enòloga',                 material: 'Roba còmoda, calçat tancat',                              obs: 'Visita guiada a un dels cellers més antics de la regió. Inclou trasllat en vehicle privat i degustació premium.',                                                      image: 'https://images.unsplash.com/photo-1504279807002-09854ccc9b6c?w=600&q=80' },
+  { id: 12, day: 2, type: 'show',      name: 'Nit d\'Òpera Mediterrània',            time: '21:00', location: 'Gran Saló Azur',                     instructor: 'Soprano Isabelle Roux & Tenor Miguel Ríos', material: 'Etiqueta formal',                                        obs: 'Vetllada única amb àries i cançons mediterrànies interpretades per solistes internacionals.',                                                                          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80' },
+  { id: 13, day: 3, type: 'esportiva', name: 'Aqua Fitness a la Piscina Infinity',   time: '09:30', location: 'Piscina Principal, Planta 6',        instructor: 'Nuria Pons, monitora esportiva',          material: 'Banyador, gorra (opcional)',                              obs: 'Classe a l\'aigua de 45 minuts, ideal per a totes les edats i nivells. Finalitza amb jacuzzi lliure 30 minuts.',                                                       image: 'https://images.unsplash.com/photo-1560089000-7433a4ebbd64?w=600&q=80' },
+  { id: 14, day: 3, type: 'cultural',  name: 'Masterclass de Cuina Mediterrània',    time: '11:00', location: 'Cuina Gastronòmica, Planta B1',      instructor: 'Chef Tomàs Pérez ⭐⭐',                   material: 'Roba còmoda (davantal proporcionat)',                     obs: 'Aprèn a preparar tres receptes estrella del Mediterrani. Dinar inclòs amb els plats elaborats. Màxim 8 participants.',                                                  image: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=600&q=80' },
+  { id: 15, day: 3, type: 'show',      name: 'Gran Gala d\'Acomiadament',            time: '21:30', location: 'Jardí Imperial & Terrassa',          instructor: 'Orquestra Palau & Artistes Convidats',    material: 'Etiqueta de gala',                                        obs: 'La vetllada més especial de la temporada. Focs artificials, música en directe, buffet gourmet i barra lliure premium.',                                                image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80' },
+];
+
+// ── RENDER ────────────────────────────────────────────────
+function renderDays() {
+  document.getElementById('daysNav').innerHTML = DAYS.map((d, i) => `
+    <div class="day-tab ${i === currentDay ? 'active' : ''}" onclick="selectDay(${i})">
+      <div class="day-num">${d.date}</div>
+      <div class="day-label">${d.month}</div>
+    </div>
+  `).join('');
+}
+
+function renderActivities() {
+  const section = document.getElementById('activitiesSection');
+  const day  = DAYS[currentDay];
+  const list = activities.filter(a =>
+    a.day === currentDay && (currentFilter === 'all' || a.type === currentFilter)
+  );
+
+  if (!list.length) {
+    section.innerHTML = `<div class="empty-state"><p>No hi ha activitats per a aquest filtre.</p></div>`;
+    return;
+  }
+
+  const typeEmoji = { esportiva: '🏊', cultural: '🏛️', show: '🎭' };
+  const typeName  = { esportiva: 'Esportiva', cultural: 'Cultural', show: 'Espectacle' };
+  const dayNames  = ['Dimarts','Dimecres','Dijous','Divendres'];
+
+  section.innerHTML = `
+    <div class="section-date">
+      ${day.date} d'Abril <span>${dayNames[currentDay]}</span>
+    </div>
+    ${list.map(a => `
+      <div class="activity-card" id="card-${a.id}">
+        <div class="activity-header" onclick="toggleCard(${a.id})">
+          <div class="type-pill ${a.type}">${typeEmoji[a.type]}</div>
+          <div class="activity-summary">
+            <div class="activity-name">${a.name}</div>
+            <div class="activity-meta">
+              <span class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                ${a.time}
+              </span>
+              <span class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                ${a.location}
+              </span>
+            </div>
+          </div>
+          <span class="type-badge ${a.type}">${typeName[a.type]}</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="activity-body">
+          ${a.image
+            ? `<img class="activity-image" src="${a.image}" alt="${a.name}" onerror="this.style.display='none'" />`
+            : `<div class="activity-image-placeholder">🌊</div>`
+          }
+          <div class="activity-details">
+            <div class="detail-grid">
+              <div class="detail-item"><span class="detail-label">Horari</span><span class="detail-value">${a.time} h</span></div>
+              <div class="detail-item"><span class="detail-label">Tipus</span><span class="detail-value">${typeEmoji[a.type]} ${typeName[a.type]}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Ubicació</span><span class="detail-value">${a.location}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Classe impartida per</span><span class="detail-value">${a.instructor}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Material necessari</span><span class="detail-value">${a.material}</span></div>
+              <div class="detail-item detail-full"><span class="detail-label">Observacions</span><div class="obs-box">${a.obs}</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function toggleCard(id) { document.getElementById(`card-${id}`).classList.toggle('open'); }
+function selectDay(i)   { currentDay = i; renderDays(); renderActivities(); }
+
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => { b.className = 'filter-btn'; });
+  btn.classList.add(`active-${type}`);
+  renderActivities();
+}
+
+// ── LOGO ──────────────────────────────────────────────────
+function renderLogo() {
+  const logoEl = document.getElementById('headerLogo');
+  if (logoUrl) {
+    logoEl.innerHTML = `<img src="${escHtml(logoUrl)}" alt="Logo" onerror="this.parentElement.innerHTML='<span class=header-logo-text>AP</span>'" />`;
+  } else {
+    logoEl.innerHTML = `<span class="header-logo-text">AP</span>`;
+  }
+}
+
+function openEditLogo() {
+  closeModal('overlayAdminMenu');
+  document.getElementById('logoUrlInput').value = logoUrl;
+  const prev = document.getElementById('logoPreview');
+  prev.innerHTML = logoUrl ? `<img src="${escHtml(logoUrl)}" style="width:100%;height:100%;object-fit:cover;border-radius:12px" />` : 'AP';
+  document.getElementById('logoMsg').innerHTML = '';
+  openModal('overlayEditLogo');
+}
+
+function previewLogo() {
+  const url = document.getElementById('logoUrlInput').value.trim();
+  const prev = document.getElementById('logoPreview');
+  if (url) {
+    prev.innerHTML = `<img src="${escHtml(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:12px" onerror="this.parentElement.innerHTML='AP'" />`;
+  } else {
+    prev.innerHTML = 'AP';
+  }
+}
+
+function saveLogo() {
+  logoUrl = document.getElementById('logoUrlInput').value.trim();
+  renderLogo();
+  document.getElementById('logoMsg').innerHTML = '<div class="msg success">Logo actualitzat ✓</div>';
+  setTimeout(() => { closeModal('overlayEditLogo'); openModal('overlayAdminMenu'); }, 1200);
+}
+
+// ── ADMIN ─────────────────────────────────────────────────
+function openAdminLogin() {
+  if (isAdmin) { openModal('overlayAdminMenu'); return; }
+  document.getElementById('loginInput').value = '';
+  document.getElementById('loginMsg').innerHTML = '';
+  openModal('overlayLogin');
+  setTimeout(() => document.getElementById('loginInput').focus(), 100);
+}
+
+function doLogin() {
+  const val = document.getElementById('loginInput').value;
+  if (val === adminPassword) {
+    isAdmin = true; closeModal('overlayLogin'); openModal('overlayAdminMenu');
+  } else {
+    document.getElementById('loginMsg').innerHTML = '<div class="msg error">Contrasenya incorrecta</div>';
+  }
+}
+
+function openChangePassword() {
+  closeModal('overlayAdminMenu');
+  ['pwCurrent','pwNew','pwConfirm'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pwMsg').innerHTML = '';
+  openModal('overlayChangePw');
+}
+
+function doChangePassword() {
+  const cur = document.getElementById('pwCurrent').value;
+  const nw  = document.getElementById('pwNew').value;
+  const cf  = document.getElementById('pwConfirm').value;
+  const msg = document.getElementById('pwMsg');
+  if (cur !== adminPassword) { msg.innerHTML = '<div class="msg error">La contrasenya actual no és correcta</div>'; return; }
+  if (!nw || nw.length < 3)  { msg.innerHTML = '<div class="msg error">La nova contrasenya ha de tenir almenys 3 caràcters</div>'; return; }
+  if (nw !== cf)             { msg.innerHTML = '<div class="msg error">Les contrasenyes no coincideixen</div>'; return; }
+  adminPassword = nw;
+  msg.innerHTML = '<div class="msg success">Contrasenya actualitzada correctament ✓</div>';
+  setTimeout(() => { closeModal('overlayChangePw'); openModal('overlayAdminMenu'); }, 1500);
+}
+
+function openEditActivities() {
+  closeModal('overlayAdminMenu');
+  const body = document.getElementById('editListBody');
+  const typeEmoji = { esportiva: '🏊', cultural: '🏛️', show: '🎭' };
+
+  body.innerHTML = DAYS.map((d, di) => `
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;">${d.full}</div>
+      <div class="edit-act-list">
+        ${activities.filter(a => a.day === di).map(a => `
+          <div class="edit-act-item" onclick="openEditSingle(${a.id})">
+            <div>
+              <span>${typeEmoji[a.type]} ${a.name}</span><br/>
+              <small>${a.time} · ${a.location}</small>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('') + `<hr class="divider"/><p style="font-size:11px;font-weight:500;color:var(--text-light);text-align:center;">Selecciona una activitat per editar-la</p>`;
+
+  openModal('overlayEditList');
+}
+
+function openEditSingle(id) {
+  editingId = id;
+  const a = activities.find(x => x.id === id);
+  if (!a) return;
+  closeModal('overlayEditList');
+
+  document.getElementById('editActivityBody').innerHTML = `
+    <div class="pw-form">
+      <div class="field-group"><label>Nom de l'activitat</label><input type="text" id="edit_name" value="${escHtml(a.name)}" /></div>
+      <div class="field-group"><label>Hora</label><input type="time" id="edit_time" value="${a.time}" /></div>
+      <div class="field-group"><label>Ubicació</label><input type="text" id="edit_location" value="${escHtml(a.location)}" /></div>
+      <div class="field-group"><label>Classe impartida per</label><input type="text" id="edit_instructor" value="${escHtml(a.instructor)}" /></div>
+      <div class="field-group"><label>Material necessari</label><input type="text" id="edit_material" value="${escHtml(a.material)}" /></div>
+      <div class="field-group"><label>Observacions</label><textarea id="edit_obs">${escHtml(a.obs)}</textarea></div>
+      <div class="field-group"><label>URL de la imatge</label><input type="url" id="edit_image" value="${escHtml(a.image||'')}" placeholder="https://exemple.com/imatge.jpg" /></div>
+      <div class="field-group"><label>Tipus</label>
+        <select id="edit_type">
+          <option value="esportiva" ${a.type==='esportiva'?'selected':''}>🏊 Esportiva</option>
+          <option value="cultural"  ${a.type==='cultural' ?'selected':''}>🏛️ Cultural</option>
+          <option value="show"      ${a.type==='show'     ?'selected':''}>🎭 Espectacle</option>
+        </select>
+      </div>
+      <div id="editMsg"></div>
+      <button class="btn-primary btn-gold"    onclick="saveEditSingle()">Desar canvis</button>
+      <button class="btn-primary btn-danger"  onclick="askDelete()" style="margin-top:6px">🗑️ Eliminar activitat</button>
+      <button class="btn-primary btn-neutral" onclick="openEditActivities()" style="margin-top:6px">← Tornar al llistat</button>
+    </div>
+  `;
+
+  openModal('overlayEditActivity');
+}
+
+function saveEditSingle() {
+  const a = activities.find(x => x.id === editingId);
+  if (!a) return;
+  a.name       = document.getElementById('edit_name').value.trim();
+  a.time       = document.getElementById('edit_time').value;
+  a.location   = document.getElementById('edit_location').value.trim();
+  a.instructor = document.getElementById('edit_instructor').value.trim();
+  a.material   = document.getElementById('edit_material').value.trim();
+  a.obs        = document.getElementById('edit_obs').value.trim();
+  a.image      = document.getElementById('edit_image').value.trim();
+  a.type       = document.getElementById('edit_type').value;
+  document.getElementById('editMsg').innerHTML = '<div class="msg success">Desat correctament ✓</div>';
+  renderActivities();
+  setTimeout(() => { closeModal('overlayEditActivity'); openModal('overlayAdminMenu'); }, 1200);
+}
+
+function askDelete()     { closeModal('overlayEditActivity'); openModal('overlayConfirmDelete'); }
+function confirmDelete() { activities = activities.filter(x => x.id !== editingId); closeModal('overlayConfirmDelete'); renderActivities(); openModal('overlayAdminMenu'); }
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeIfOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+renderDays();
+renderActivities();
+</script>
+</body>
+</html>
