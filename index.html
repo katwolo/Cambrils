@@ -85,6 +85,13 @@
       color: var(--text-light); letter-spacing: 0.5px;
     }
 
+    .header-buttons { display: flex; gap: 8px; align-items: center; }
+
+    .sync-status {
+      font-size: 10px; font-weight: 600;
+      color: var(--mint); padding: 4px 8px;
+    }
+
     .btn-admin {
       background: var(--indigo-light);
       border: none; border-radius: 50%;
@@ -475,12 +482,15 @@
       <span>Col·lecció de Luxe</span>
     </div>
   </div>
-  <button class="btn-admin" onclick="openAdminLogin()" title="Administració">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>
-  </button>
+  <div class="header-buttons">
+    <span class="sync-status" id="syncStatus">Carregant...</span>
+    <button class="btn-admin" onclick="openAdminLogin()" title="Administració">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </div>
 </header>
 
 <div class="hero">
@@ -570,7 +580,7 @@
     <div class="modal-body">
       <div class="pw-form">
         <div style="text-align:center;margin-bottom:8px">
-          <div id="logoPreview" style="width:72px;height:72px;border-radius:16px;background:var(--indigo-light);display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--indigo);overflow:hidden;"></div>
+          <div id="logoPreview" style="width:72px;height:72px;border-radius:16px;background:var(--indigo-light);display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--indigo)">AP</div>
         </div>
         <div class="field-group">
           <label>URL de la imatge del logo</label>
@@ -656,7 +666,27 @@
   </div>
 </div>
 
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
+// ── CONFIGURACIÓ GOOGLE SHEETS ────────────────────────
+// INSTRUCTIONS:
+// 1. Crea una nova Google Sheet: https://sheets.google.com
+// 2. Crea dues pestanyes: "actividades" i "settings"
+// 3. Pestanya "actividades" - columnes:
+//    id, day, type, name, time, location, instructor, material, obs, image
+// 4. Pestanya "settings" - columnes:
+//    key, value
+// 5. Afegeix files a settings:
+//    - logo | (URL o buit)
+//    - adminPassword | 1234
+// 6. Publica: File > Share > "Publish to web" > Copy link
+// 7. Extreu l'ID de la URL (entre /d/ i /edit)
+// 8. Reemplaza "YOUR_SHEET_ID" a continuació
+
+const SHEET_ID = 'YOUR_SHEET_ID';  // ← CANVIA AMB EL TEU ID
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL';  // ← Opcional, per guardar
+
+// ── GLOBALS ────────────────────────────────────────────
 const DAYS = [
   { date: '27', month: 'ABR', full: 'Dimarts, 27 d\'Abril 2027' },
   { date: '28', month: 'ABR', full: 'Dimecres, 28 d\'Abril 2027' },
@@ -664,32 +694,99 @@ const DAYS = [
   { date: '30', month: 'ABR', full: 'Divendres, 30 d\'Abril 2027' },
 ];
 
-let adminPassword = '1234';
 let currentDay    = 0;
 let currentFilter = 'all';
 let isAdmin       = false;
 let editingId     = null;
 let logoUrl       = '';
+let adminPassword = '1234';
+let activities    = [];
 
-let activities = [
-  { id: 1,  day: 0, type: 'esportiva', name: 'Ioga Sunrise a la Terrassa',          time: '07:30', location: 'Terrassa Infinity, Planta 8',      instructor: 'Valentina Greco',                         material: 'Estora (inclosa), roba còmoda',                          obs: 'Es recomana venir en dejú. Places limitades a 12 persones. Vistes panoràmiques al Mediterrani.',                                                                      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80' },
-  { id: 2,  day: 0, type: 'cultural',  name: 'Tour Privat Casc Antic',               time: '10:00', location: 'Sortida lobby principal',           instructor: 'Marco Ferri, historiador',                 material: 'Calçat còmode, barret recomanat',                         obs: 'Recorregut de 2,5 hores pels racons més secrets de la ciutat. Inclou degustació de productes locals.',                                                                 image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80' },
-  { id: 3,  day: 0, type: 'cultural',  name: 'Taller de Ceràmica Tradicional',       time: '16:00', location: 'Sala Artesania, Planta B1',         instructor: 'Lucia Morales',                           material: 'Davantal proporcionat, roba que pugui tacar-se',          obs: 'Aprèn les tècniques de ceràmica mediterrània. Les peces es couen al forn i s\'entreguen l\'últim dia.',                                                                image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80' },
-  { id: 4,  day: 0, type: 'show',      name: 'Nit de Flamenc & Tapes',               time: '21:00', location: 'Jardí El Aljibe',                   instructor: 'Companyia Carmen Vega',                    material: 'Vestimenta elegant recomanada',                           obs: 'Espectacle íntim sota les estrelles amb actuació d\'artistes internacionals. Inclou servei de tapes gourmet i copa de benvinguda.',                                    image: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=600&q=80' },
-  { id: 5,  day: 1, type: 'esportiva', name: 'Caiac a Cales Cristal·lines',          time: '09:00', location: 'Embarcador Privat',                 instructor: 'Carlos Ruiz, monitor nàutic',              material: 'Banyador, crema solar, tovallola (caiac i armilla inclosos)', obs: 'Excursió de 2 hores per cales d\'accés exclusiu. Parada per fer snorkel en una cala secreta.',                                                                       image: 'https://images.unsplash.com/photo-1464280950902-dc5bd4384660?w=600&q=80' },
-  { id: 6,  day: 1, type: 'esportiva', name: 'Pàdel en Pistes de Terra Batuda',      time: '11:30', location: 'Club de Tennis, Villa Sud',          instructor: 'Andrea Blanco, entrenadora federada',     material: 'Roba esportiva, sabatilles de terra (pala disponible)',   obs: 'Sessió d\'iniciació o perfeccionament. Grups màxim 4 jugadors. Reserva la teva plaça amb antelació.',                                                                 image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600&q=80' },
-  { id: 7,  day: 1, type: 'cultural',  name: 'Tast de Vins & Olis del Mediterrani',  time: '18:30', location: 'Celler La Criança, Soterrani',       instructor: 'Sommelier Pierre Dubois',                 material: 'Cap — tot inclòs',                                        obs: 'Selecció de 6 vins DO locals maridats amb olis d\'oliva verge extra de la finca. Maridat amb formatges artesans.',                                                     image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80' },
-  { id: 8,  day: 1, type: 'show',      name: 'Jazz a la Terrassa del Capvespre',     time: '20:30', location: 'Sky Bar Posidó',                     instructor: 'Trio Mediterrani Jazz',                    material: 'Smart casual',                                           obs: 'Concert íntim amb vistes al mar en el moment del crepuscle. Carta de còctels d\'autor disponible.',                                                                   image: 'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&q=80' },
-  { id: 9,  day: 2, type: 'esportiva', name: 'Senderisme Costaner a l\'Alba',        time: '07:00', location: 'Mirador de la Cala, accés Nord',     instructor: 'Iván Serra, guia de muntanya',            material: 'Sabatilles de trekking, aigua, berenar lleuger',          obs: 'Ruta de 8 km nivell moderat amb vistes d\'alçada. Durada aproximada 2h 30min. Places limitades a 10 persones.',                                                        image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80' },
-  { id: 10, day: 2, type: 'esportiva', name: 'Paddle Surf & Snorkel',                time: '10:30', location: 'Platja Privada Azur',                instructor: 'Sara Vidal, instructora aquàtica',        material: 'Banyador, ulleres de sol (equip inclòs)',                 obs: 'Sessió combinada de paddle surf i snorkel en aigües protegides. Apte per a tots els nivells.',                                                                         image: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&q=80' },
-  { id: 11, day: 2, type: 'cultural',  name: 'Visita a Celler Històric Segle XII',   time: '16:00', location: 'Sortida en Bus, Lobby',              instructor: 'Elena Castillo, enòloga',                 material: 'Roba còmoda, calçat tancat',                              obs: 'Visita guiada a un dels cellers més antics de la regió. Inclou trasllat en vehicle privat i degustació premium.',                                                      image: 'https://images.unsplash.com/photo-1504279807002-09854ccc9b6c?w=600&q=80' },
-  { id: 12, day: 2, type: 'show',      name: 'Nit d\'Òpera Mediterrània',            time: '21:00', location: 'Gran Saló Azur',                     instructor: 'Soprano Isabelle Roux & Tenor Miguel Ríos', material: 'Etiqueta formal',                                        obs: 'Vetllada única amb àries i cançons mediterrànies interpretades per solistes internacionals.',                                                                          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80' },
-  { id: 13, day: 3, type: 'esportiva', name: 'Aqua Fitness a la Piscina Infinity',   time: '09:30', location: 'Piscina Principal, Planta 6',        instructor: 'Nuria Pons, monitora esportiva',          material: 'Banyador, gorra (opcional)',                              obs: 'Classe a l\'aigua de 45 minuts, ideal per a totes les edats i nivells. Finalitza amb jacuzzi lliure 30 minuts.',                                                       image: 'https://images.unsplash.com/photo-1560089000-7433a4ebbd64?w=600&q=80' },
-  { id: 14, day: 3, type: 'cultural',  name: 'Masterclass de Cuina Mediterrània',    time: '11:00', location: 'Cuina Gastronòmica, Planta B1',      instructor: 'Chef Tomàs Pérez ⭐⭐',                   material: 'Roba còmoda (davantal proporcionat)',                     obs: 'Aprèn a preparar tres receptes estrella del Mediterrani. Dinar inclòs amb els plats elaborats. Màxim 8 participants.',                                                  image: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=600&q=80' },
-  { id: 15, day: 3, type: 'show',      name: 'Gran Gala d\'Acomiadament',            time: '21:30', location: 'Jardí Imperial & Terrassa',          instructor: 'Orquestra Palau & Artistes Convidats',    material: 'Etiqueta de gala',                                        obs: 'La vetllada més especial de la temporada. Focs artificials, música en directe, buffet gourmet i barra lliure premium.',                                                image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80' },
-];
+// ── FUNCIONS HELPERS ────────────────────────────────────
+function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── RENDER ────────────────────────────────────────────────
+function syncStatus(msg) {
+  document.getElementById('syncStatus').textContent = msg;
+}
+
+// ── CARGAR DADES DE GOOGLE SHEETS ───────────────────────
+function loadDataFromSheets() {
+  if (!SHEET_ID || SHEET_ID === 'YOUR_SHEET_ID') {
+    syncStatus('⚠️ Configura SHEET_ID');
+    return;
+  }
+
+  google.charts.load('current', { packages: ['corechart'] });
+  google.setOnLoadCallback(() => {
+    // Cargar actividades
+    const actQuery = new google.visualization.Query(
+      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/query?tq=SELECT%20*%20FROM%20'actividades'&tqx=out:json`
+    );
+    actQuery.send((response) => {
+      if (!response.isError()) {
+        const data = response.getDataTable();
+        activities = [];
+        for (let i = 0; i < data.getNumberOfRows(); i++) {
+          activities.push({
+            id: parseInt(data.getValue(i, 0)) || i,
+            day: parseInt(data.getValue(i, 1)) || 0,
+            type: data.getValue(i, 2) || 'cultural',
+            name: data.getValue(i, 3) || '',
+            time: data.getValue(i, 4) || '',
+            location: data.getValue(i, 5) || '',
+            instructor: data.getValue(i, 6) || '',
+            material: data.getValue(i, 7) || '',
+            obs: data.getValue(i, 8) || '',
+            image: data.getValue(i, 9) || ''
+          });
+        }
+        renderActivities();
+      }
+    });
+
+    // Caregar settings
+    const setQuery = new google.visualization.Query(
+      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/query?tq=SELECT%20*%20FROM%20'settings'&tqx=out:json`
+    );
+    setQuery.send((response) => {
+      if (!response.isError()) {
+        const data = response.getDataTable();
+        for (let i = 0; i < data.getNumberOfRows(); i++) {
+          const key = data.getValue(i, 0);
+          const value = data.getValue(i, 1);
+          if (key === 'logo') logoUrl = value;
+          if (key === 'adminPassword') adminPassword = value;
+        }
+        renderLogo();
+        syncStatus('✓ Sincronizado');
+      } else {
+        syncStatus('✗ Error de carga');
+      }
+    });
+  });
+}
+
+// ── GUARDAR EN GOOGLE SHEETS ────────────────────────────
+function saveToSheets(action, data) {
+  syncStatus('Guardando...');
+  
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL') {
+    // Modo demo - solo guardar en memoria
+    syncStatus('✓ Guardado (demo)');
+    setTimeout(() => { syncStatus('✓ Sincronizado'); }, 1000);
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('action', action);
+  formData.append('data', JSON.stringify(data));
+
+  fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData })
+    .then(() => { syncStatus('✓ Sincronizado'); })
+    .catch(err => { syncStatus('✗ Error al guardar'); console.error(err); });
+}
+
+// ── RENDER ────────────────────────────────────────────
 function renderDays() {
   document.getElementById('daysNav').innerHTML = DAYS.map((d, i) => `
     <div class="day-tab ${i === currentDay ? 'active' : ''}" onclick="selectDay(${i})">
@@ -777,7 +874,7 @@ function setFilter(type, btn) {
   renderActivities();
 }
 
-// ── LOGO ──────────────────────────────────────────────────
+// ── LOGO ────────────────────────────────────────────
 function renderLogo() {
   const logoEl = document.getElementById('headerLogo');
   if (logoUrl) {
@@ -809,11 +906,12 @@ function previewLogo() {
 function saveLogo() {
   logoUrl = document.getElementById('logoUrlInput').value.trim();
   renderLogo();
+  saveToSheets('updateSetting', { key: 'logo', value: logoUrl });
   document.getElementById('logoMsg').innerHTML = '<div class="msg success">Logo actualitzat ✓</div>';
   setTimeout(() => { closeModal('overlayEditLogo'); openModal('overlayAdminMenu'); }, 1200);
 }
 
-// ── ADMIN ─────────────────────────────────────────────────
+// ── ADMIN ────────────────────────────────────────────
 function openAdminLogin() {
   if (isAdmin) { openModal('overlayAdminMenu'); return; }
   document.getElementById('loginInput').value = '';
@@ -847,6 +945,7 @@ function doChangePassword() {
   if (!nw || nw.length < 3)  { msg.innerHTML = '<div class="msg error">La nova contrasenya ha de tenir almenys 3 caràcters</div>'; return; }
   if (nw !== cf)             { msg.innerHTML = '<div class="msg error">Les contrasenyes no coincideixen</div>'; return; }
   adminPassword = nw;
+  saveToSheets('updateSetting', { key: 'adminPassword', value: nw });
   msg.innerHTML = '<div class="msg success">Contrasenya actualitzada correctament ✓</div>';
   setTimeout(() => { closeModal('overlayChangePw'); openModal('overlayAdminMenu'); }, 1500);
 }
@@ -922,21 +1021,29 @@ function saveEditSingle() {
   a.obs        = document.getElementById('edit_obs').value.trim();
   a.image      = document.getElementById('edit_image').value.trim();
   a.type       = document.getElementById('edit_type').value;
+  
+  saveToSheets('updateActivity', a);
   document.getElementById('editMsg').innerHTML = '<div class="msg success">Desat correctament ✓</div>';
-  renderActivities();
   setTimeout(() => { closeModal('overlayEditActivity'); openModal('overlayAdminMenu'); }, 1200);
 }
 
 function askDelete()     { closeModal('overlayEditActivity'); openModal('overlayConfirmDelete'); }
-function confirmDelete() { activities = activities.filter(x => x.id !== editingId); closeModal('overlayConfirmDelete'); renderActivities(); openModal('overlayAdminMenu'); }
+function confirmDelete() { 
+  activities = activities.filter(x => x.id !== editingId);
+  saveToSheets('deleteActivity', { id: editingId });
+  closeModal('overlayConfirmDelete');
+  renderActivities();
+  openModal('overlayAdminMenu');
+}
 
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeIfOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
-function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+// Inicializar
+loadDataFromSheets();
 renderDays();
-renderActivities();
 </script>
+
 </body>
 </html>
