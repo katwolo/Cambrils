@@ -1,5 +1,4 @@
 // ── CONFIGURACIÓ ─────────────────────────────────────────
-// Posa aquí l'ID del teu Google Sheet (entre /d/ i /edit de la URL)
 const SHEET_ID = '1StZBnekRiVpmhIcFlNWGQHXVErilP-WAh0ejI9SrvqA';
 
 // ── INICIALITZAR FULL (executa manualment una vegada) ─────
@@ -16,7 +15,6 @@ function initSheets() {
   actSheet.getRange(1, 1, 1, 10).setValues([[
     'id', 'day', 'type', 'name', 'time', 'location', 'instructor', 'material', 'obs', 'image'
   ]]);
-  // Fila d'exemple
   actSheet.getRange(2, 1, 1, 10).setValues([[
     1, 0, 'esportiva', 'Ioga al jardí', '08:00', 'Jardí principal', 'Maria García', 'Tovallola', '', ''
   ]]);
@@ -29,23 +27,56 @@ function initSheets() {
     setSheet.clearContents();
   }
   setSheet.getRange(1, 1, 1, 2).setValues([['key', 'value']]);
-  setSheet.getRange(2, 1, 2, 2).setValues([
-    ['logo', ''],
-    ['adminPassword', '1234']
+  setSheet.getRange(2, 1, 6, 2).setValues([
+    ['logo',          ''],
+    ['adminPassword', '1234'],
+    ['day0',          'Diumenge, 27 d\'Abril 2027|27|ABR'],
+    ['day1',          'Dilluns, 28 d\'Abril 2027|28|ABR'],
+    ['day2',          'Dimarts, 29 d\'Abril 2027|29|ABR'],
+    ['day3',          'Dimecres, 30 d\'Abril 2027|30|ABR'],
   ]);
 
-  // Eliminar la pestanya "Sheet1" per defecte si existeix
   const defaultSheet = ss.getSheetByName('Sheet1') || ss.getSheetByName('Hoja 1') || ss.getSheetByName('Fulla 1');
   if (defaultSheet && ss.getSheets().length > 2) {
     ss.deleteSheet(defaultSheet);
   }
 
   Logger.log('✓ Fulls inicialitzats correctament');
-  Logger.log('  - actividades: capçaleres + 1 fila d\'exemple');
-  Logger.log('  - settings: logo (buit) + adminPassword (1234)');
 }
 
-// ── GESTIONAR PETICIONS POST (no modificar) ───────────────
+// ── LLEGIR DADES (GET) ────────────────────────────────────
+function doGet() {
+  try {
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+
+    const actSheet = ss.getSheetByName('actividades');
+    const actRows  = actSheet.getDataRange().getValues();
+    const acts = actRows.slice(1)
+      .filter(r => r[0] !== '' && r[0] !== null)
+      .map(r => ({
+        id: Number(r[0]), day: Number(r[1]), type: String(r[2] || 'cultural'),
+        name: String(r[3] || ''), time: String(r[4] || ''),
+        location: String(r[5] || ''), instructor: String(r[6] || ''),
+        material: String(r[7] || ''), obs: String(r[8] || ''),
+        image: String(r[9] || '')
+      }));
+
+    const setSheet = ss.getSheetByName('settings');
+    const setRows  = setSheet.getDataRange().getValues();
+    const settings = {};
+    setRows.slice(1).forEach(r => { if (r[0]) settings[String(r[0])] = String(r[1] || ''); });
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ activities: acts, settings }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ── GUARDAR DADES (POST) ──────────────────────────────────
 function doPost(e) {
   try {
     const action = e.parameter.action;
@@ -65,7 +96,6 @@ function doPost(e) {
           return ok();
         }
       }
-      // Si no existeix, afegir fila nova
       sheet.appendRow([
         data.id, data.day, data.type, data.name,
         data.time, data.location, data.instructor,

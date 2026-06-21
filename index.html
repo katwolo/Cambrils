@@ -564,6 +564,13 @@
             <small>Canvia la imatge del logo</small>
           </div>
         </button>
+        <button class="admin-menu-item" onclick="openEditDays()">
+          <div class="admin-menu-icon" style="background:var(--purple-light)">📅</div>
+          <div class="item-text">
+            <strong>Configurar Dies</strong>
+            <small>Canvia les dates de l'esdeveniment</small>
+          </div>
+        </button>
         <button class="admin-menu-item" onclick="openChangePassword()">
           <div class="admin-menu-icon" style="background:var(--coral-light)">🔑</div>
           <div class="item-text">
@@ -694,7 +701,7 @@ const SHEET_ID = '1StZBnekRiVpmhIcFlNWGQHXVErilP-WAh0ejI9SrvqA';  // ← CANVIA 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylWvLKNVKnPQjfk-ec2Ps1GawW7875JyunrEN0jP_QZlZNxbOkkOux0ZJ-3tlZDrRz/exec';  // ← Opcional, per guardar
 
 // ── GLOBALS ────────────────────────────────────────────
-const DAYS = [
+let DAYS = [
   { date: '27', month: 'ABR', full: 'Dimarts, 27 d\'Abril 2027' },
   { date: '28', month: 'ABR', full: 'Dimecres, 28 d\'Abril 2027' },
   { date: '29', month: 'ABR', full: 'Dijous, 29 d\'Abril 2027' },
@@ -718,59 +725,36 @@ function syncStatus(msg) {
 
 // ── CARGAR DADES DE GOOGLE SHEETS ───────────────────────
 function loadDataFromSheets() {
-  if (!SHEET_ID || SHEET_ID === 'YOUR_SHEET_ID') {
-    syncStatus('⚠️ Configura SHEET_ID');
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL') {
+    syncStatus('⚠️ Configura APPS_SCRIPT_URL');
     return;
   }
+  syncStatus('Carregant...');
+  fetch(APPS_SCRIPT_URL)
+    .then(r => r.json())
+    .then(json => {
+      if (json.error) { syncStatus('✗ Error de carga'); return; }
 
-  google.charts.load('current', { packages: ['corechart'] });
-  google.setOnLoadCallback(() => {
-    // Cargar actividades
-    const actQuery = new google.visualization.Query(
-      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/query?tq=SELECT%20*%20FROM%20'actividades'&tqx=out:json`
-    );
-    actQuery.send((response) => {
-      if (!response.isError()) {
-        const data = response.getDataTable();
-        activities = [];
-        for (let i = 0; i < data.getNumberOfRows(); i++) {
-          activities.push({
-            id: parseInt(data.getValue(i, 0)) || i,
-            day: parseInt(data.getValue(i, 1)) || 0,
-            type: data.getValue(i, 2) || 'cultural',
-            name: data.getValue(i, 3) || '',
-            time: data.getValue(i, 4) || '',
-            location: data.getValue(i, 5) || '',
-            instructor: data.getValue(i, 6) || '',
-            material: data.getValue(i, 7) || '',
-            obs: data.getValue(i, 8) || '',
-            image: data.getValue(i, 9) || ''
-          });
-        }
-        renderActivities();
-      }
-    });
+      activities = json.activities || [];
+      renderActivities();
 
-    // Caregar settings
-    const setQuery = new google.visualization.Query(
-      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/query?tq=SELECT%20*%20FROM%20'settings'&tqx=out:json`
-    );
-    setQuery.send((response) => {
-      if (!response.isError()) {
-        const data = response.getDataTable();
-        for (let i = 0; i < data.getNumberOfRows(); i++) {
-          const key = data.getValue(i, 0);
-          const value = data.getValue(i, 1);
-          if (key === 'logo') logoUrl = value;
-          if (key === 'adminPassword') adminPassword = value;
+      const s = json.settings || {};
+      if (s.logo)          logoUrl       = s.logo;
+      if (s.adminPassword) adminPassword = s.adminPassword;
+
+      // Actualitzar dies si estan configurats al Sheet
+      [0,1,2,3].forEach(i => {
+        const val = s['day' + i];
+        if (val) {
+          const parts = val.split('|');
+          DAYS[i] = { full: parts[0] || DAYS[i].full, date: parts[1] || DAYS[i].date, month: parts[2] || DAYS[i].month };
         }
-        renderLogo();
-        syncStatus('✓ Sincronizado');
-      } else {
-        syncStatus('✗ Error de carga');
-      }
-    });
-  });
+      });
+      renderDays();
+      renderLogo();
+      syncStatus('✓ Sincronizado');
+    })
+    .catch(() => syncStatus('✗ Error de carga'));
 }
 
 // ── GUARDAR EN GOOGLE SHEETS ────────────────────────────
@@ -1042,6 +1026,44 @@ function confirmDelete() {
   closeModal('overlayConfirmDelete');
   renderActivities();
   openModal('overlayAdminMenu');
+}
+
+function openEditDays() {
+  closeModal('overlayAdminMenu');
+  document.getElementById('editActivityBody').innerHTML = `
+    <div class="pw-form">
+      <p style="font-size:12px;color:var(--text-light);margin-bottom:12px">Format del nom complet: <em>Dimarts, 27 d'Abril 2027</em></p>
+      ${DAYS.map((d, i) => `
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Dia ${i + 1}</div>
+          <div class="field-group"><label>Nom complet</label><input type="text" id="day_full_${i}" value="${escHtml(d.full)}" placeholder="Dimarts, 27 d'Abril 2027"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="field-group"><label>Número</label><input type="text" id="day_date_${i}" value="${escHtml(d.date)}" placeholder="27" maxlength="2"/></div>
+            <div class="field-group"><label>Mes (3 lletres)</label><input type="text" id="day_month_${i}" value="${escHtml(d.month)}" placeholder="ABR" maxlength="3"/></div>
+          </div>
+        </div>
+      `).join('')}
+      <div id="editMsg"></div>
+      <button class="btn-primary btn-gold" onclick="saveEditDays()">Desar dies</button>
+      <button class="btn-primary btn-neutral" onclick="closeModal('overlayEditActivity');openModal('overlayAdminMenu')" style="margin-top:6px">← Tornar</button>
+    </div>
+  `;
+  openModal('overlayEditActivity');
+}
+
+function saveEditDays() {
+  [0,1,2,3].forEach(i => {
+    const full  = document.getElementById('day_full_' + i).value.trim();
+    const date  = document.getElementById('day_date_' + i).value.trim();
+    const month = document.getElementById('day_month_' + i).value.trim().toUpperCase();
+    if (full) {
+      DAYS[i] = { full, date, month };
+      saveToSheets('updateSetting', { key: 'day' + i, value: `${full}|${date}|${month}` });
+    }
+  });
+  renderDays();
+  document.getElementById('editMsg').innerHTML = '<div class="msg success">Dies desats ✓</div>';
+  setTimeout(() => { closeModal('overlayEditActivity'); openModal('overlayAdminMenu'); }, 1200);
 }
 
 function openNewActivity() {
