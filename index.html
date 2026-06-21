@@ -788,7 +788,7 @@ function saveToSheets(action, data) {
   formData.append('action', action);
   formData.append('data', JSON.stringify(data));
 
-  fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData })
+  fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' })
     .then(() => { syncStatus('✓ Sincronizado'); })
     .catch(err => { syncStatus('✗ Error al guardar'); console.error(err); });
 }
