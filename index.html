@@ -543,6 +543,13 @@
     </div>
     <div class="modal-body">
       <div class="admin-menu-list">
+        <button class="admin-menu-item" onclick="openNewActivity()">
+          <div class="admin-menu-icon" style="background:var(--mint-light)">➕</div>
+          <div class="item-text">
+            <strong>Nova Activitat</strong>
+            <small>Afegeix una activitat nova</small>
+          </div>
+        </button>
         <button class="admin-menu-item" onclick="openEditActivities()">
           <div class="admin-menu-icon" style="background:var(--indigo-light)">✏️</div>
           <div class="item-text">
@@ -973,7 +980,8 @@ function openEditActivities() {
         `).join('')}
       </div>
     </div>
-  `).join('') + `<hr class="divider"/><p style="font-size:11px;font-weight:500;color:var(--text-light);text-align:center;">Selecciona una activitat per editar-la</p>`;
+  `).join('') + `<hr class="divider"/>
+  <button class="btn-primary btn-gold" onclick="openNewActivity()" style="width:100%;margin-top:4px">➕ Nova activitat</button>`;
 
   openModal('overlayEditList');
 }
@@ -1034,6 +1042,67 @@ function confirmDelete() {
   closeModal('overlayConfirmDelete');
   renderActivities();
   openModal('overlayAdminMenu');
+}
+
+function openNewActivity() {
+  editingId = null;
+  closeModal('overlayAdminMenu');
+  closeModal('overlayEditList');
+
+  document.getElementById('editActivityBody').innerHTML = `
+    <div class="pw-form">
+      <div class="field-group"><label>Dia</label>
+        <select id="edit_day">
+          ${DAYS.map((d, i) => `<option value="${i}">${d.full}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group"><label>Nom de l'activitat</label><input type="text" id="edit_name" value="" /></div>
+      <div class="field-group"><label>Hora</label><input type="time" id="edit_time" value="" /></div>
+      <div class="field-group"><label>Ubicació</label><input type="text" id="edit_location" value="" /></div>
+      <div class="field-group"><label>Classe impartida per</label><input type="text" id="edit_instructor" value="" /></div>
+      <div class="field-group"><label>Material necessari</label><input type="text" id="edit_material" value="" /></div>
+      <div class="field-group"><label>Observacions</label><textarea id="edit_obs"></textarea></div>
+      <div class="field-group"><label>URL de la imatge</label><input type="url" id="edit_image" value="" placeholder="https://exemple.com/imatge.jpg" /></div>
+      <div class="field-group"><label>Tipus</label>
+        <select id="edit_type">
+          <option value="esportiva">🏊 Esportiva</option>
+          <option value="cultural">🏛️ Cultural</option>
+          <option value="show">🎭 Espectacle</option>
+        </select>
+      </div>
+      <div id="editMsg"></div>
+      <button class="btn-primary btn-gold" onclick="saveNewActivity()">Crear activitat</button>
+      <button class="btn-primary btn-neutral" onclick="closeModal('overlayEditActivity');openEditActivities()" style="margin-top:6px">← Tornar al llistat</button>
+    </div>
+  `;
+
+  openModal('overlayEditActivity');
+}
+
+function saveNewActivity() {
+  const name = document.getElementById('edit_name').value.trim();
+  if (!name) {
+    document.getElementById('editMsg').innerHTML = '<div class="msg error">El nom és obligatori</div>';
+    return;
+  }
+  const newId = activities.length > 0 ? Math.max(...activities.map(a => a.id)) + 1 : 1;
+  const a = {
+    id:         newId,
+    day:        parseInt(document.getElementById('edit_day').value),
+    type:       document.getElementById('edit_type').value,
+    name:       name,
+    time:       document.getElementById('edit_time').value,
+    location:   document.getElementById('edit_location').value.trim(),
+    instructor: document.getElementById('edit_instructor').value.trim(),
+    material:   document.getElementById('edit_material').value.trim(),
+    obs:        document.getElementById('edit_obs').value.trim(),
+    image:      document.getElementById('edit_image').value.trim(),
+  };
+  activities.push(a);
+  saveToSheets('updateActivity', a);
+  renderActivities();
+  document.getElementById('editMsg').innerHTML = '<div class="msg success">Activitat creada ✓</div>';
+  setTimeout(() => { closeModal('overlayEditActivity'); openModal('overlayAdminMenu'); }, 1200);
 }
 
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
